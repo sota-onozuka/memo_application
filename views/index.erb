@@ -1,30 +1,27 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-<link rel="stylesheet" href="index.css" />
-<meta charset="utf8">
-<title>top</title>
+  <link rel="stylesheet" href="index.css" />
+  <meta charset="utf8">
+  <title>top</title>
 </head>
-
 <body>
-<div class="title">
-  <h1>メモアプリ</h1>
-</div>
-
-<div class = "btnbackground">
-<a href="http://localhost:4567/create_memo" class="btn">作成</a>
-</div>
-
-<% require "json" %>
-<%= Dir.pwd%>
-<% File.open("./memos.json", mode = "r") do |f| %>
-  <% @hash = JSON.load(f)["memos"]%>
-<% end%>
-<ul>
-  <% @hash.each do |h|%>
-    <li><a href="http://localhost:4567/memo/<%=h['id'] %>" class = "memo"><%= h["title"]%></a></li>
-  <% end%>
-</ul>
+  <div class="title">
+    <h1>メモアプリ</h1>
+  </div>
+  <div class="btnbackground"> <a href="http://localhost:4567/create_memo" class="btn">作成</a> </div>
+  <% require "json" %>
+    <% File.open("./memos.json", mode = "r") do |f| %>
+      <% @hash = JSON.load(f)["memos"]%>
+        <% end%>
+          <ul>
+          <% @hash.each do |h|%>
+            <li>
+              <a href="http://localhost:4567/memo/<%=h['id'] %>" class="memo">
+                <%= h["title"]%>
+              </a>
+            </li>
+          <% end%>
+          </ul>
 </body>
 </html>

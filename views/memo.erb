@@ -7,7 +7,6 @@
 </head>
 
 <body>
-<%= Dir.pwd %>
 <% require "json" %>
 <% File.open("memos.json", mode = "r") do |f| %>
   <% @hash = JSON.load(f)["memos"]%>
