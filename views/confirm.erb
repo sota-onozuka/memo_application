@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>内容確認</h1>
+  <div>
+    タイトル: <%=h @title%>
+  </div>  
+  <div>
+    内容:
+      <%=h @content%>
+  </div>    
+  <a href="http://localhost:4567/">戻る</a>
+  <a href="http://localhost:4567/memo/<%= params["splat"][0] %>/edit">修正</a>
+</body>
+</html>

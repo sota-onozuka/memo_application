@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>new memo</title>
+  <link rel="stylesheet" href="create_memo.css" />
+</head>
+
+<body>
+<form action="/confirm/<%= @id %>" accept-charset="UTF-8" method="post">
+  <div class="title_group">
+    <label class="label_title">タイトル</label>
+    <br>
+    <input class="form-item_textarea" type="text" name="title" id="memo_title">
+  </div>
+  <div class="content_group">
+    <label class="label_content">内容</label>
+    <br>
+    <textarea name="content" class="form-item_textarea"></textarea>
+  </div>
+  <div class="container">
+    <a href="http://localhost:4567/" class="btn">戻る</a>
+    <input type="submit" class="btn" value="完了">
+  </div>
+</form>
+</body>
+
+
+
