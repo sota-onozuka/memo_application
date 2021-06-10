@@ -5,28 +5,15 @@
 </head>
 
 <body>
-<%= Dir.pwd %>
-<% require "json" %>
-<% File.open("memos.json", mode = "r") do |f| %>
-  <% @hash = JSON.load(f)["memos"]%>
-<% end%>
-<% @hash.each do |c|%>
-  <% if c["id"].to_s == params["splat"][0].to_s %>
-    <%@i = c["id"]%>
-    <%@t = c["title"]%>
-    <%@b = c["body"]%>
-  <% end%>
-<% end%>
-
-<form action="/confirm_edit/<%= @i %>" accept-charset="UTF-8" method="post">
+<form action="/confirm_edit/<%= @memo["id"].to_s %>" accept-charset="UTF-8" method="post">
   <input type="hidden" name="_method" value="PATCH">
   <div>
     <label class="form-item__label">タイトル</label>
-    <input class="form-item_textarea" type="text" name="title" value="<%= @t %>">
+    <input class="form-item_textarea" type="text" name="title" value="<%= @memo["title"].force_encoding("UTF-8") %>">
   <div>
   </div>
     <label class="form-item__label">内容</label>
-    <textarea name="content" class="form-item_textarea"><%= @b %></textarea>
+    <textarea name="content" class="form-item_textarea"><%= @memo["content"].force_encoding("UTF-8") %></textarea>
   </div>
   <input type="submit" value="完了">
 </form>

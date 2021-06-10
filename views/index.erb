@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <link rel="stylesheet" href="index.css" />
-  <meta charset="utf8">
+  <meta charset="UTF-8">
   <title>top</title>
 </head>
 <body>
@@ -10,18 +10,15 @@
     <h1>メモアプリ</h1>
   </div>
   <div class="btnbackground"> <a href="http://localhost:4567/create_memo" class="btn">作成</a> </div>
-  <% require "json" %>
-    <% File.open("./memos.json", mode = "r") do |f| %>
-      <% @hash = JSON.load(f)["memos"]%>
-        <% end%>
           <ul>
-          <% @hash.each do |h|%>
+          <% @memos.each do |memo|%>
             <li>
-              <a href="http://localhost:4567/memo/<%=h['id'] %>" class="memo">
-                <%= h["title"]%>
+              <a href="http://localhost:4567/memo/<%=memo['id'] %>" class="memo">
+                <%= memo["title"].force_encoding("UTF-8")%>
               </a>
             </li>
           <% end%>
           </ul>
+          
 </body>
 </html>
