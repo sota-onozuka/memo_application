@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <link rel="stylesheet" href="/reset.css" />
   <link rel="stylesheet" href="index.css" />
   <meta charset="utf8">
   <title>top</title>
@@ -9,7 +10,10 @@
   <div class="title">
     <h1>メモアプリ</h1>
   </div>
-  <div class="btnbackground"> <a href="http://localhost:4567/create_memo" class="btn">作成</a> </div>
+  <div class="btnbackground">
+    <a href="/create_memo" class="btn">作成</a>
+  </div>
+
   <% require "json" %>
     <% File.open("./memos.json", mode = "r") do |f| %>
       <% @hash = JSON.load(f)["memos"]%>
@@ -17,8 +21,8 @@
           <ul>
           <% @hash.each do |h|%>
             <li>
-              <a href="http://localhost:4567/memo/<%=h['id'] %>" class="memo">
-                <%= h["title"]%>
+              <a href="/memo/<%=h['id'] %>" class="memo">
+                <%= h h["title"]%>
               </a>
             </li>
           <% end%>

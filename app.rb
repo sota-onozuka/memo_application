@@ -16,9 +16,9 @@ get '/' do
   erb :index
 end
 
-delete '/' do
+delete '/memo/:id/delete' do
   @memos = JSON.parse(open('memos.json').read)
-  @memos['memos'] = @memos['memos'].reject { |m| m['id'].to_i == session[:id].to_i }
+  @memos['memos'] = @memos['memos'].reject { |m| m['id'].to_i == params[:id].to_i }
   File.open('memos.json', 'w') do |f|
     JSON.dump(@memos, f)
   end
@@ -32,7 +32,7 @@ get '/create_memo' do
   erb :create_memo
 end
 
-post '/confirm/*' do
+post '/confirm' do
   File.open('num.txt', 'r') do |f|
     @id = f.read.to_i
   end
@@ -48,19 +48,20 @@ post '/confirm/*' do
   redirect to("/memo/#{@id}"), 303
 end
 
-get '/memo/*/edit' do
+get '/memo/:id/edit' do
+  @id = params[:id]
   erb :edit_memo
 end
 
-get '/memo/*' do
-  session[:id] = params['splat'][0]
+get '/memo/:id' do
+  @id = params[:id]
   erb :memo
 end
 
-patch '/confirm_edit/*' do
+patch '/confirm_edit/:id' do
   @memos = JSON.parse(open('memos.json').read)
   @memos['memos'].each do |memo|
-    next unless memo['id'].to_i == session[:id].to_i
+    next unless memo['id'].to_i == params[:id].to_i
 
     memo['title'] = params[:title]
     memo['body'] = params[:content]
@@ -68,5 +69,5 @@ patch '/confirm_edit/*' do
       JSON.dump(@memos, f)
     end
   end
-  redirect to("/memo/#{session[:id]}"), 303
+  redirect to("/memo/#{params[:id]}"), 303
 end
