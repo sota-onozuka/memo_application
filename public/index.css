@@ -1,5 +1,3 @@
-/*ヘッダータイトル*/
-
 .title
 {
   text-align: center;
@@ -30,7 +28,6 @@ ul
   background-color: #fcfcfc;
   padding: 0.5em 0 0.5em 1.5em;
 }
-
 
 ul li
 {

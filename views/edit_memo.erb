@@ -3,32 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="/reset.css" />
+  <link rel="stylesheet" href="/memo.css" />
   <link rel="stylesheet" href="/create_memo.css" />
 </head>
 
 <body>
-<% require "json" %>
-<% File.open("memos.json", mode = "r") do |f| %>
-  <% @hash = JSON.load(f)["memos"]%>
-<% end%>
-<% @hash.each do |c|%>
-  <% if c["id"].to_s == @id.to_s %>
-    <%@i = c["id"]%>
-    <%@t = c["title"]%>
-    <%@b = c["body"]%>
-  <% end%>
-<% end%>
 
 <form action="/confirm_edit/<%= @i %>" accept-charset="UTF-8" method="post">
   <input type="hidden" name="_method" value="PATCH">
-  <div>
+  <div class="title">
     <label class="form-item__label">タイトル</label>
-    <br>
     <input class="form-item_textarea" type="text" name="title" value="<%= h @t %>">
-  <div>
   </div>
+  <div class="content" >
     <label class="form-item__label">内容</label>
-    <br>
     <textarea name="content" class="form-item_textarea"><%= h @b %></textarea>
   </div>
   <input type="submit" class="btn" value="完了">

@@ -8,18 +8,6 @@
 </head>
 
 <body>
-<% require "json" %>
-<% File.open("memos.json", mode = "r") do |f| %>
-  <% @hash = JSON.load(f)["memos"]%>
-<% end%>
-<% @hash.each do |c|%>
-  <% if c["id"].to_s == @id.to_s %>
-    <%@i = c["id"]%>
-    <%@t = c["title"]%>
-    <%@b = c["body"]%>
-  <% end%>
-<% end%>
-
 <div class="title_group">
   <div class="label_title_background">
     <label class="label_title">タイトル</label>

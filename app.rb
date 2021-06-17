@@ -3,9 +3,23 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'fileutils'
+require 'json'
 
 enable :method_override
-use Rack::Session::Cookie
+
+def detect_memo
+  File.open("memos.json", mode = "r") do |f|
+    @hash = JSON.load(f)["memos"]
+  end
+  @hash.each do |c|
+    if c["id"].to_s == params[:id].to_s
+      @i = c["id"]
+      @t = c["title"]
+      @b = c["body"]
+    end
+  end
+  return [@i, @t, @b]
+end
 
 helpers do
   include Rack::Utils
@@ -49,12 +63,12 @@ post '/confirm' do
 end
 
 get '/memo/:id/edit' do
-  @id = params[:id]
+  @i, @t, @b = detect_memo
   erb :edit_memo
 end
 
 get '/memo/:id' do
-  @id = params[:id]
+  @i, @t, @b = detect_memo
   erb :memo
 end
 
