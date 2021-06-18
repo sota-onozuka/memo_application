@@ -1,0 +1,192 @@
+/*
+////////////////////////////////////////
+reset.css を読み込んで全てのスタイルをなくす
+////////////////////////////////////////
+*/
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*
+////////////////////////////////////////
+reset.css では足りない初期化を追加
+////////////////////////////////////////
+*/
+
+/* 全てに box-sizing: border-box; を適用 */
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+/* 画像に関する初期設定 */
+img {
+  /* 大きい画像がはみ出さないように */
+  max-width: 100%;
+  /* 画像周りの無駄なスペースができないように */
+  vertical-align: bottom;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0;
+}
+
+input,textarea {
+  font-family: inherit;
+}
+
+/*
+////////////////////////////////////////
+初期設定
+////////////////////////////////////////
+*/
+
+html {
+  font-family: arial, sans-serif;
+}
+
+body {
+  color: #444;
+  background-color: #aaa;
+}
+
+/* 全体を真ん中に配置 */
+.container {
+  width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #666;
+  box-shadow: rgba(0, 0, 0, .4) 0 0 8px;
+  /* floatを使った場合の対策 */
+  overflow: hidden; 
+}
+
+/*
+////////////////////////////////////////
+ここから下にCSSを書いてデザインを入れよう
+////////////////////////////////////////
+*/
+
+/*ヘッダータイトル*/
+
+body{
+  background: #fcfcfc;
+}
+
+.title_group .label_title
+{
+  padding: 30px;
+}
+
+.title_group .title
+{
+  transition    : .3s;         /* なめらか変化 */
+  font-size: 30px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 30px;
+  border-style: solid;
+  border-top: solid 2px;
+  border-bottom: solid 2px;
+  border-color: #000066;
+  color: #000066;
+  background-color: #fcfcfc;
+}
+
+.content_group .content
+{
+  transition    : .3s;         /* なめらか変化 */
+  font-size: 30px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 30px;
+  border-style: solid;
+  border-top: solid 2px;
+  border-bottom: solid 2px;
+  border-color: #000066;
+  color: #000066;
+  background-color: #fcfcfc;
+}
+
+.content_group .label_content
+{
+  padding-left: 30px;
+}
+
+.container{
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  background-color: #fcfcfc;
+  justify-content: flex-start;
+  border-style: none;
+  box-shadow: none;
+}
+
+.btn
+{
+  display       : inline-block;
+  font-size     : 10pt;        /* 文字サイズ */
+  text-align    : center;      /* 文字位置   */
+  cursor        : pointer;     /* カーソル   */
+  padding       : 8px 12px;   /* 余白       */
+  background    : #000066;     /* 背景色     */
+  color         : #ffffff;     /* 文字色     */
+  line-height   : 1em;         /* 1行の高さ  */
+  transition    : .3s;         /* なめらか変化 */
+  text-decoration: none;   /* 枠の指定 */
+  margin-left: 10px;
+  border-radius: 3px;
+  border-color: #1e366a;
+}
+.btn:hover {
+  box-shadow    : none;        /* カーソル時の影消去 */
+  color         : #000066;     /* 背景色     */
+  background    : #1e366a;     /* 文字色     */
+}
