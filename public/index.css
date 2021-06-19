@@ -1,0 +1,36 @@
+.title
+{
+  text-align: center;
+  font-size: 40px;
+  padding: 50px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.btn
+{
+  border-radius : 5%;          /* 角丸       */
+  cursor        : pointer;     /* カーソル   */
+  padding       : 12px 12px;   /* 余白       */
+}
+.btn:hover {
+  text-decoration: none;
+}
+
+ul
+{
+
+  color: #1e366a;
+  border-top: solid #1e366a 3px;/*上のボーダー*/
+  border-bottom: solid #1e366a 3px;/*下のボーダー*/
+  background-color: #fcfcfc;
+  padding: 0.5em 0 0.5em 1.5em;
+}
+
+ul li
+{
+  list-style-type: disc;
+  padding: 7.5px 15px;
+}

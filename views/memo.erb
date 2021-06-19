@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="stylesheet" href="/memo.css" />
+  <meta charset="UTF-8">
+  <title>memo</title>
+</head>
+
+<body>
+<div class="title_group">
+  <div class="label_title_background">
+    <label class="label_title">タイトル</label>
+  </div>
+  <div class= "title">
+    <%=h @memo["title"].force_encoding("UTF-8") %>
+  </div>
+</div>
+<div class ="content_group">
+  <label class="label_content">内容</label>
+  <div class = "content">
+    <%=h @memo["content"].force_encoding("UTF-8") %>
+  </div>
+</div>
+
+<div class='container'>
+  <a href="http://localhost:4567/memo/<%=@memo["id"].to_s %>/edit" class="btn">編集</a>
+  <a href="http://localhost:4567/" class="btn">戻る</a>
+  <form action="/" accept-charset="UTF-8" method="post">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="submit" value="削除" class="btn">
+  </form>
+</div>
+</body>
+</html>

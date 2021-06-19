@@ -1,0 +1,37 @@
+.content_group .label_content
+{
+  margin-top: 10px;
+  padding-left: 30px;
+}
+
+.container{
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 100%;
+  display: flex;
+  background-color: #fcfcfc;
+  justify-content: flex-start;
+  border-style: none;
+  box-shadow: none;
+}
+
+.form-item_textarea
+{
+  resize: none;
+  width: 250px;
+  height: 50px;
+  border-radius: 3px;
+  border-width: 1px;
+  border-color: #666;
+  margin-left: 20px; 
+}
+
+.title_group .form-item_textarea
+{
+  height: 30px;
+}
+
+.content_group .form-item_textarea
+{
+  height: 70px;
+}
