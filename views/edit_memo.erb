@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/reset.css" />
+  <link rel="stylesheet" href="/memo.css" />
+  <link rel="stylesheet" href="/create_memo.css" />
+</head>
+
+<body>
+
+<form action="/confirm_edit/<%= @i %>" accept-charset="UTF-8" method="post">
+  <input type="hidden" name="_method" value="PATCH">
+  <div class="title">
+    <label class="form-item__label">タイトル</label>
+    <input class="form-item_textarea" type="text" name="title" value="<%= h @t %>">
+  </div>
+  <div class="content" >
+    <label class="form-item__label">内容</label>
+    <textarea name="content" class="form-item_textarea"><%= h @b %></textarea>
+  </div>
+  <input type="submit" class="btn" value="完了">
+</form>
+</body>
