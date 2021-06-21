@@ -6,8 +6,22 @@ require 'fileutils'
 require 'dotenv/load'
 require 'pg'
 
+
 enable :method_override
-use Rack::Session::Cookie
+
+def detect_memo
+  File.open("memos.json", mode = "r") do |f|
+    @hash = JSON.load(f)["memos"]
+  end
+  @hash.each do |c|
+    if c["id"].to_s == params[:id].to_s
+      @i = c["id"]
+      @t = c["title"]
+      @b = c["body"]
+    end
+  end
+  return [@i, @t, @b]
+end
 
 helpers do
   include Rack::Utils
@@ -68,7 +82,7 @@ get '/create_memo' do
   erb :create_memo
 end
 
-post '/confirm/*' do
+post '/confirm' do
   File.open('num.txt', 'r') do |f|
     @id = f.read.to_i
   end
@@ -79,22 +93,28 @@ post '/confirm/*' do
   redirect to("/memo/#{@id}"), 303
 end
 
-get '/memo/*/edit' do
-  @memo = Memo.read(session[:id])[0]
+
+get '/memo/:id/edit' do
+  @i, @t, @b = detect_memo
   erb :edit_memo
 end
 
-get '/memo/*' do
-  session[:id] = params['splat'][0]
-  @memo = Memo.read(session[:id])[0]
+get '/memo/:id' do
+  @i, @t, @b = detect_memo
   erb :memo
 end
 
-patch '/confirm_edit/*' do
-  session[:id] = params['splat'][0]
-  @memo = Memo.read(session[:id])[0]
-  Memo.edit(id: @memo['id'].to_i, title: params[:title], content: params[:content])
-  redirect to("/memo/#{session[:id]}"), 303
+patch '/confirm_edit/:id' do
+
+  @memos = Memo.all
+  @memos['memos'].each do |memo|
+    next unless memo['id'].to_i == params[:id].to_i
+
+    memo['title'] = params[:title]
+    memo['body'] = params[:content]
+
+  end
+  redirect to("/memo/#{params[:id]}"), 303
 end
 
 not_found do

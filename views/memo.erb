@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <link rel="stylesheet" href="/reset.css" />
   <link rel="stylesheet" href="/memo.css" />
   <meta charset="UTF-8">
   <title>memo</title>
@@ -23,9 +24,9 @@
 </div>
 
 <div class='container'>
-  <a href="http://localhost:4567/memo/<%=@memo["id"].to_s %>/edit" class="btn">編集</a>
-  <a href="http://localhost:4567/" class="btn">戻る</a>
-  <form action="/" accept-charset="UTF-8" method="post">
+  <a href="/memo/<%=@i %>/edit" class="btn">編集</a>
+  <a href="/" class="btn">戻る</a>
+  <form action="/memo/<%=@i %>/delete" accept-charset="UTF-8" method="post">
     <input type="hidden" name="_method" value="DELETE">
     <input type="submit" value="削除" class="btn">
   </form>

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <link rel="stylesheet" href="/reset.css" />
+    <link rel="stylesheet" href="/memo.css" />
   <link rel="stylesheet" href="index.css" />
   <meta charset="UTF-8">
   <title>top</title>
@@ -9,12 +11,16 @@
   <div class="title">
     <h1>メモアプリ</h1>
   </div>
-  <div class="btnbackground"> <a href="http://localhost:4567/create_memo" class="btn">作成</a> </div>
+
+
+  <div class="btnbackground">
+    <a href="/create_memo" class="btn">作成</a>
+  </div>
           <ul>
           <% @memos.each do |memo|%>
             <li>
-              <a href="http://localhost:4567/memo/<%=memo['id'] %>" class="memo">
-                <%= memo["title"].force_encoding("UTF-8")%>
+              <a href="/memo/<%=h['id'] %>" class="memo">
+                <%= h h["title"]%>
               </a>
             </li>
           <% end%>
