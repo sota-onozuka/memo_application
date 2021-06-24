@@ -70,8 +70,8 @@ get '/' do
   erb :index
 end
 
-delete '/' do
-  Memo.delete(session[:id].to_i)
+delete '/memo/:id/delete' do
+  Memo.delete(params[:id].to_i)
   redirect to('/'), 303
 end
 
@@ -95,25 +95,18 @@ end
 
 
 get '/memo/:id/edit' do
-  @i, @t, @b = detect_memo
+  @memo = Memo.read(params[:id])[0]
   erb :edit_memo
 end
 
 get '/memo/:id' do
-  @i, @t, @b = detect_memo
+  @memo = Memo.read(params[:id])[0]
   erb :memo
 end
 
 patch '/confirm_edit/:id' do
-
-  @memos = Memo.all
-  @memos['memos'].each do |memo|
-    next unless memo['id'].to_i == params[:id].to_i
-
-    memo['title'] = params[:title]
-    memo['body'] = params[:content]
-
-  end
+  @memos = Memo.read
+  Memo.edit(id: params[:id], title: params[:title], content: params[:content])
   redirect to("/memo/#{params[:id]}"), 303
 end
 
