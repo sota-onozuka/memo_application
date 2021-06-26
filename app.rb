@@ -15,11 +15,15 @@ end
 
 class Memo
   class << self
+    def connect_to_db(db_name)
+      @connection = PG.connect(dbname: db_name)
+    end
+
     def create(title: memo_title, content: memo_content)
-      connection = PG.connect(dbname: 'memos')
-      connection.prepare('insert', 'insert into memo(title, content) values ($1,$2);')
-      connection.exec_prepared('insert', [title, content])
-      cv = connection.exec("SELECT currval('memo_id_seq');")
+      #connection = PG.connect(dbname: 'memos')
+      @connection.prepare('create', 'insert into memo(title, content) values ($1,$2);')
+      @connection.exec_prepared('create', [title, content])
+      cv = $connection.exec("SELECT currval('memo_id_seq');")
       cv.each do |i|
         @id = i["currval"]
       end
@@ -27,12 +31,12 @@ class Memo
     end
 
     def read(id = nil)
-      connection = PG.connect(dbname: 'memos')
+      #connection = PG.connect(dbname: 'memos')
       if id.nil?
-        results = connection.exec('select * from memo')
+        results = @connection.exec('select * from memo')
       else
-        connection.prepare('select', 'select * from memo where id = $1;')
-        results = connection.exec_prepared('select', [id.to_i])
+        @connection.prepare('select_to_read', 'select * from memo where id = $1;')
+        results = $connection.exec_prepared('select_to_read', [id.to_i])
       end
       ls = []
       results.each do |result|
@@ -42,17 +46,21 @@ class Memo
     end
 
     def edit(id: memo_id, title: memo_title, content: memo_content)
-      connection = PG.connect(dbname: 'memos')
-      connection.prepare('update', 'update memo set title = $1, content = $2 where id = $3')
-      connection.exec_prepared('update', [title, content, id])
+      #connection = PG.connect(dbname: 'memos')
+      @connection.prepare('update', 'update memo set title = $1, content = $2 where id = $3')
+      @connection.exec_prepared('update', [title, content, id])
     end
 
     def delete(id)
-      connection = PG.connect(dbname: 'memos')
-      connection.prepare('delete', 'delete from memo where id = $1;')
-      connection.exec_prepared('delete', [id])
+      #connection = PG.connect(dbname: 'memos')
+      @connection.prepare('delete', 'delete from memo where id = $1;')
+      @connection.exec_prepared('delete', [id])
     end
   end
+end
+
+before do
+  @connection = Memo.connect_to_db('memos') #connect_to_dbと分けるのは構造化プログラミングのためか、、、？質問する。
 end
 
 get '/' do
