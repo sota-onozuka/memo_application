@@ -17,7 +17,7 @@ sql文
 ```
 create database memos;
 \c memos
-create table memo (id int not null, title varchar(1000) not null, content varchar(1000) not null, primary key (id) );
+create table memo (id serial not null, title varchar(1000) not null, content varchar(1000) not null, primary key (id) );
 ```
 ## 環境：Requirement
 Debian 10

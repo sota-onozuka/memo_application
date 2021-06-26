@@ -6,22 +6,7 @@ require 'fileutils'
 require 'dotenv/load'
 require 'pg'
 
-
 enable :method_override
-
-def detect_memo
-  File.open("memos.json", mode = "r") do |f|
-    @hash = JSON.load(f)["memos"]
-  end
-  @hash.each do |c|
-    if c["id"].to_s == params[:id].to_s
-      @i = c["id"]
-      @t = c["title"]
-      @b = c["body"]
-    end
-  end
-  return [@i, @t, @b]
-end
 
 helpers do
   include Rack::Utils
@@ -30,10 +15,15 @@ end
 
 class Memo
   class << self
-    def create(id: memo_id, title: memo_title, content: memo_content)
+    def create(title: memo_title, content: memo_content)
       connection = PG.connect(dbname: 'memos')
-      connection.prepare('insert', 'insert into memo(id, title, content) values ($1,$2, $3);')
-      connection.exec_prepared('insert', [id, title, content])
+      connection.prepare('insert', 'insert into memo(title, content) values ($1,$2);')
+      connection.exec_prepared('insert', [title, content])
+      cv = connection.exec("SELECT currval('memo_id_seq');")
+      cv.each do |i|
+        @id = i["currval"]
+      end
+      @id
     end
 
     def read(id = nil)
@@ -76,20 +66,11 @@ delete '/memo/:id/delete' do
 end
 
 get '/create_memo' do
-  File.open('num.txt', 'r') do |f|
-    @id = f.read.to_i
-  end
   erb :create_memo
 end
 
 post '/confirm' do
-  File.open('num.txt', 'r') do |f|
-    @id = f.read.to_i
-  end
-  Memo.create(id: @id, title: params[:title], content: params[:content])
-  File.open('num.txt', 'w') do |f|
-    f.print @id + 1
-  end
+  @id = Memo.create(title: params[:title], content: params[:content])
   redirect to("/memo/#{@id}"), 303
 end
 
