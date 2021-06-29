@@ -20,10 +20,8 @@ class Memo
     end
 
     def create(title: memo_title, content: memo_content)
-      #connection = PG.connect(dbname: 'memos')
-      @connection.prepare('create', 'insert into memo(title, content) values ($1,$2);')
       @connection.exec_prepared('create', [title, content])
-      cv = $connection.exec("SELECT currval('memo_id_seq');")
+      cv = @connection.exec("SELECT currval('memo_id_seq');")
       cv.each do |i|
         @id = i["currval"]
       end
@@ -31,12 +29,10 @@ class Memo
     end
 
     def read(id = nil)
-      #connection = PG.connect(dbname: 'memos')
       if id.nil?
         results = @connection.exec('select * from memo')
       else
-        @connection.prepare('select_to_read', 'select * from memo where id = $1;')
-        results = $connection.exec_prepared('select_to_read', [id.to_i])
+        results = @connection.exec_prepared('select_to_read', [id.to_i])
       end
       ls = []
       results.each do |result|
@@ -46,21 +42,21 @@ class Memo
     end
 
     def edit(id: memo_id, title: memo_title, content: memo_content)
-      #connection = PG.connect(dbname: 'memos')
       @connection.prepare('update', 'update memo set title = $1, content = $2 where id = $3')
-      @connection.exec_prepared('update', [title, content, id])
+      @connection.exec_prepared('update', [title, content, id.to_i])
     end
 
     def delete(id)
-      #connection = PG.connect(dbname: 'memos')
-      @connection.prepare('delete', 'delete from memo where id = $1;')
-      @connection.exec_prepared('delete', [id])
+      @connection.exec_prepared('delete', [id.to_i])
     end
   end
 end
 
 before do
   @connection = Memo.connect_to_db('memos') #connect_to_dbと分けるのは構造化プログラミングのためか、、、？質問する。
+  @connection.prepare('create', 'insert into memo(title, content) values ($1,$2);')
+  @connection.prepare('select_to_read', 'select * from memo where id = $1;')
+  @connection.prepare('delete', 'delete from memo where id = $1;')
 end
 
 get '/' do
@@ -94,7 +90,6 @@ get '/memo/:id' do
 end
 
 patch '/confirm_edit/:id' do
-  @memos = Memo.read
   Memo.edit(id: params[:id], title: params[:title], content: params[:content])
   redirect to("/memo/#{params[:id]}"), 303
 end
