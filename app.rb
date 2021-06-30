@@ -3,85 +3,97 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'fileutils'
-require 'json'
+require 'dotenv/load'
+require 'pg'
 
 enable :method_override
-
-def detect_memo
-  File.open("memos.json", mode = "r") do |f|
-    @hash = JSON.load(f)["memos"]
-  end
-  @hash.each do |c|
-    if c["id"].to_s == params[:id].to_s
-      @i = c["id"]
-      @t = c["title"]
-      @b = c["body"]
-    end
-  end
-  return [@i, @t, @b]
-end
 
 helpers do
   include Rack::Utils
   alias_method :h, :escape_html
 end
 
+class Memo
+  class << self
+    def connect_to_db(db_name)
+      @connection = PG.connect(dbname: db_name)
+    end
+
+    def create(title: memo_title, content: memo_content)
+      @connection.exec_prepared('create', [title, content])
+      cv = @connection.exec("SELECT currval('memo_id_seq');")
+      cv.each do |i|
+        @id = i["currval"]
+      end
+      @id
+    end
+
+    def read(id = nil)
+      if id.nil?
+        results = @connection.exec('select * from memo')
+      else
+        results = @connection.exec_prepared('select_to_read', [id.to_i])
+      end
+      ls = []
+      results.each do |result|
+        ls.push(result)
+      end
+      ls
+    end
+
+    def edit(id: memo_id, title: memo_title, content: memo_content)
+      @connection.exec_prepared('update', [title, content, id.to_i])
+    end
+
+    def delete(id)
+      @connection.exec_prepared('delete', [id.to_i])
+    end
+  end
+end
+
+before do
+  @instant_connection = Memo.connect_to_db('memos') #connect_to_dbと分けるのは構造化プログラミングのためか、、、？質問する。
+  @instant_connection.prepare('create', 'insert into memo(title, content) values ($1,$2);')
+  @instant_connection.prepare('update', 'update memo set title = $1, content = $2 where id = $3')
+  @instant_connection.prepare('select_to_read', 'select * from memo where id = $1;')
+  @instant_connection.prepare('delete', 'delete from memo where id = $1;')
+end
+
 get '/' do
+  @memos = Memo.read
   erb :index
 end
 
 delete '/memo/:id/delete' do
-  @memos = JSON.parse(open('memos.json').read)
-  @memos['memos'] = @memos['memos'].reject { |m| m['id'].to_i == params[:id].to_i }
-  File.open('memos.json', 'w') do |f|
-    JSON.dump(@memos, f)
-  end
+  Memo.delete(params[:id].to_i)
   redirect to('/'), 303
 end
 
 get '/create_memo' do
-  File.open('num.txt', 'r') do |f|
-    @id = f.read.to_i
-  end
   erb :create_memo
 end
 
 post '/confirm' do
-  File.open('num.txt', 'r') do |f|
-    @id = f.read.to_i
-  end
-  @memos = JSON.parse(open('memos.json').read)
-  memo = { 'id' => @id, 'title' => params[:title], 'body' => params[:content] }
-  @memos['memos'].push(memo)
-  File.open('memos.json', 'w') do |f|
-    JSON.dump(@memos, f)
-  end
-  File.open('num.txt', 'w') do |f|
-    f.print @id + 1
-  end
+  @id = Memo.create(title: params[:title], content: params[:content])
   redirect to("/memo/#{@id}"), 303
 end
 
+
 get '/memo/:id/edit' do
-  @i, @t, @b = detect_memo
+  @memo = Memo.read(params[:id])[0]
   erb :edit_memo
 end
 
 get '/memo/:id' do
-  @i, @t, @b = detect_memo
+  @memo = Memo.read(params[:id])[0]
   erb :memo
 end
 
 patch '/confirm_edit/:id' do
-  @memos = JSON.parse(open('memos.json').read)
-  @memos['memos'].each do |memo|
-    next unless memo['id'].to_i == params[:id].to_i
-
-    memo['title'] = params[:title]
-    memo['body'] = params[:content]
-    File.open('memos.json', 'w') do |f|
-      JSON.dump(@memos, f)
-    end
-  end
+  Memo.edit(id: params[:id], title: params[:title], content: params[:content])
   redirect to("/memo/#{params[:id]}"), 303
+end
+
+not_found do
+  '存在しないページにリクエストしています'
 end
