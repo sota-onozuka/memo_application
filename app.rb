@@ -42,7 +42,6 @@ class Memo
     end
 
     def edit(id: memo_id, title: memo_title, content: memo_content)
-      @connection.prepare('update', 'update memo set title = $1, content = $2 where id = $3')
       @connection.exec_prepared('update', [title, content, id.to_i])
     end
 
@@ -53,10 +52,11 @@ class Memo
 end
 
 before do
-  @connection = Memo.connect_to_db('memos') #connect_to_dbと分けるのは構造化プログラミングのためか、、、？質問する。
-  @connection.prepare('create', 'insert into memo(title, content) values ($1,$2);')
-  @connection.prepare('select_to_read', 'select * from memo where id = $1;')
-  @connection.prepare('delete', 'delete from memo where id = $1;')
+  @instant_connection = Memo.connect_to_db('memos') #connect_to_dbと分けるのは構造化プログラミングのためか、、、？質問する。
+  @instant_connection.prepare('create', 'insert into memo(title, content) values ($1,$2);')
+  @instant_connection.prepare('update', 'update memo set title = $1, content = $2 where id = $3')
+  @instant_connection.prepare('select_to_read', 'select * from memo where id = $1;')
+  @instant_connection.prepare('delete', 'delete from memo where id = $1;')
 end
 
 get '/' do
